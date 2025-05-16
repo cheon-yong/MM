@@ -19,6 +19,9 @@ public class MM : ModuleRules
 			"InputCore", 
 			"EnhancedInput",
 
+			"NavigationSystem",
+			"AIModule",
+
 			"GameplayAbilities",
 			"GameplayTasks",
 			"GameplayTags"

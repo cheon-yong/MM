@@ -32,10 +32,13 @@ void AMMPlayerCharacter::PossessedBy(AController* NewController)
 	{
 		ASC = MMPS->GetAbilitySystemComponent();
 		ASC->InitAbilityActorInfo(MMPS, this);
-	}
-}
 
-UAbilitySystemComponent* AMMPlayerCharacter::GetAbilitySystemComponent() const
-{
-	return ASC;
+		for (const auto& StartInputAbility : StartInputAbilities)
+		{
+			FGameplayAbilitySpec StartSpec(StartInputAbility.Value);
+			StartSpec.InputID = StartInputAbility.Key;
+			ASC->GiveAbility(StartSpec);
+		}
+	}
+
 }

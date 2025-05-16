@@ -13,7 +13,7 @@ class UAbilitySystemComponent;
  * 
  */
 UCLASS()
-class MM_API AMMPlayerCharacter : public AMMCharacter, public IAbilitySystemInterface
+class MM_API AMMPlayerCharacter : public AMMCharacter
 {
 	GENERATED_BODY()
 
@@ -27,9 +27,11 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 
-	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 public:
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TMap<int32, TSubclassOf<UGameplayAbility>> StartInputAbilities;
+
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
@@ -38,6 +40,5 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
-	UPROPERTY(EditAnywhere, Category = GAS)
-	TObjectPtr<UAbilitySystemComponent> ASC;
+
 };

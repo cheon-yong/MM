@@ -2,9 +2,11 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
 #include "MMGA_CombatBase.generated.h"
+
+class UMMAT_MoveToTarget;
+class UMMAT_FindTarget;
 
 /**
  * 
@@ -14,12 +16,21 @@ class MM_API UMMGA_CombatBase : public UGameplayAbility
 {
 	GENERATED_BODY()
 	
+public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;
 	
-	const AActor* GetTargetFromComponent();
+	AActor* GetTargetFromComponent() const;
+
+protected:
+
+	UFUNCTION()
+	void OnTargetAcquired(AActor* Target);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnTargetInRange(AActor* Target);
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
@@ -28,4 +39,18 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float AttackRange = 150.f;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	FGameplayTag TargetTag;
+		
+protected:
+	
+
+	UPROPERTY()
+	UMMAT_MoveToTarget* MoveTask;
+
+	UPROPERTY()
+	UMMAT_FindTarget* TargetTask;
+
+	UPROPERTY()
+	TObjectPtr<AActor> TargetActor;
 };

@@ -2,6 +2,8 @@
 
 
 #include "Player/MMPlayerController.h"
+
+#include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Character/MMCharacter.h"
@@ -45,8 +47,11 @@ void AMMPlayerController::SetupInputComponent()
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
 
+		// HoldScreen
 		EnhancedInputComponent->BindAction(HoldAction, ETriggerEvent::Started, this, &ThisClass::HoldScreen);
 		EnhancedInputComponent->BindAction(HoldAction, ETriggerEvent::Completed, this, &ThisClass::ReleaseScreen);
+
+		EnhancedInputComponent->BindAction(AutoCombatAction, ETriggerEvent::Triggered, this, &ThisClass::ActivateAbility, 0);
 	}
 	else
 	{
@@ -92,6 +97,30 @@ void AMMPlayerController::Look(const FInputActionValue& Value)
 	GetCharacter()->AddControllerYawInput(LookAxisVector.X);
 	GetCharacter()->AddControllerPitchInput(LookAxisVector.Y);
 }
+
+void AMMPlayerController::ActivateAbility(int32 InputId)
+{
+	if (AMMCharacter* MMCharacter = Cast<AMMCharacter>(GetCharacter()))
+	{
+		if (UAbilitySystemComponent* ASC = MMCharacter->GetAbilitySystemComponent())
+		{
+			FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(InputId);
+			if (Spec)
+			{
+				Spec->InputPressed = true;
+				if (Spec->IsActive())
+				{
+					ASC->AbilitySpecInputPressed(*Spec);
+				}
+				else
+				{
+					ASC->TryActivateAbility(Spec->Handle);
+				}
+			}
+		}
+	}
+}
+
 
 void AMMPlayerController::HoldScreen()
 {

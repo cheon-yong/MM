@@ -3,7 +3,6 @@
 #pragma once
 
 #include "Character/MMCharacter.h"
-
 #include "MMNonPlayerCharacter.generated.h"
 
 /**
@@ -14,4 +13,12 @@ class MM_API AMMNonPlayerCharacter : public AMMCharacter
 {
 	GENERATED_BODY()
 	
+public:
+	AMMNonPlayerCharacter();
+
+protected:
+	virtual void BeginPlay() override;
+	
+protected:
+
 };

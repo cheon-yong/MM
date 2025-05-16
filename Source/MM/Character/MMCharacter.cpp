@@ -2,10 +2,11 @@
 
 #include "MMCharacter.h"
 #include "Engine/LocalPlayer.h"
+#include "Character/AutoCombatComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
-#include "InputActionValue.h"
+#include "AbilitySystemComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -35,15 +36,23 @@ AMMCharacter::AMMCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
-	
+	ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
+
+	AutoCombatComponent = CreateDefaultSubobject<UAutoCombatComponent>(TEXT("AutoCombatComponent"));
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+}
+
+UAbilitySystemComponent* AMMCharacter::GetAbilitySystemComponent() const
+{
+	return ASC;
 }
 
 void AMMCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
 }
 
