@@ -23,13 +23,11 @@ class AMMCharacter : public ACharacter
 public:
 	AMMCharacter();
 
-
-
 protected:
 	// To add mapping context
 	virtual void BeginPlay();
 
 
-
+protected:
 };
 
