@@ -6,6 +6,7 @@
 #include "AbilitySystem/AT/MMAT_FindTarget.h"
 #include "AbilitySystem/AT/MMAT_MoveToTarget.h"
 #include "Character/AutoCombatComponent.h"
+#include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 
 
 void UMMGA_CombatBase::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -48,12 +49,27 @@ void UMMGA_CombatBase::OnTargetAcquired(AActor* InTarget)
 
 	TargetActor = InTarget;
 	MoveTask = UMMAT_MoveToTarget::MoveToTarget(this, TargetActor, AttackRange);
-	MoveTask->OnArrived.AddDynamic(this, &UMMGA_CombatBase::OnTargetInRange);
+	MoveTask->OnArrived.AddDynamic(this, &ThisClass::OnTargetInRange);
 	MoveTask->ReadyForActivation();
 }
 
 void UMMGA_CombatBase::OnTargetInRange_Implementation(AActor* Target)
 {
-	UE_LOG(LogTemp, Warning, TEXT("In Range"));
+	if (!AttackMontage || !TargetActor)
+	{
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+		return;
+	}
+
+	MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, AttackMontage);
+
+	MontageTask->OnCompleted.AddDynamic(this, &ThisClass::OnAttackMontageFinished);
+	MontageTask->OnInterrupted.AddDynamic(this, &ThisClass::OnAttackMontageFinished);
+	MontageTask->OnCancelled.AddDynamic(this, &ThisClass::OnAttackMontageFinished);
+	MontageTask->ReadyForActivation();
+}
+
+void UMMGA_CombatBase::OnAttackMontageFinished_Implementation()
+{
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }

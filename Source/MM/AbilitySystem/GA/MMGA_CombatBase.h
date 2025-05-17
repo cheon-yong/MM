@@ -7,6 +7,7 @@
 
 class UMMAT_MoveToTarget;
 class UMMAT_FindTarget;
+class UAbilityTask_PlayMontageAndWait;
 
 /**
  * 
@@ -32,6 +33,9 @@ protected:
 	UFUNCTION(BlueprintNativeEvent)
 	void OnTargetInRange(AActor* Target);
 
+	UFUNCTION(BlueprintNativeEvent)
+	void OnAttackMontageFinished();
+
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float SearchRadius = 1000.f;
@@ -43,13 +47,17 @@ public:
 	FGameplayTag TargetTag;
 		
 protected:
-	
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TObjectPtr<UAnimMontage> AttackMontage;
 
 	UPROPERTY()
-	UMMAT_MoveToTarget* MoveTask;
+	TObjectPtr<UMMAT_FindTarget> TargetTask;
 
 	UPROPERTY()
-	UMMAT_FindTarget* TargetTask;
+	TObjectPtr<UMMAT_MoveToTarget> MoveTask;
+
+	UPROPERTY()
+	TObjectPtr<UAbilityTask_PlayMontageAndWait> MontageTask;
 
 	UPROPERTY()
 	TObjectPtr<AActor> TargetActor;

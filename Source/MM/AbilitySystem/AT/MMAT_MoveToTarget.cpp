@@ -23,18 +23,32 @@ void UMMAT_MoveToTarget::Activate()
     ACharacter* Avatar = Cast<ACharacter>(GetAvatarActor());
     if (!Avatar || !TargetActor.IsValid())
     {
-        EndTask();
+        EndTask(false);
         return;
     }
 
-    AController* Controller = Avatar->GetController();
-    if (Controller)
+    AvatarController = Avatar->GetController();
+    if (AvatarController == nullptr)
     {
-        FVector TargetLocation = TargetActor->GetActorLocation();
-        UAIBlueprintHelperLibrary::SimpleMoveToLocation(Controller, TargetLocation);
+        EndTask(false);
+        return;
     }
 
+    CheckDistance();
+    UAIBlueprintHelperLibrary::SimpleMoveToActor(AvatarController, TargetActor.Get());
+
     bTickingTask = true;
+}
+
+void UMMAT_MoveToTarget::CheckDistance()
+{
+    AActor* Avatar = GetAvatarActor();
+    float Distance = FVector::Dist(Avatar->GetActorLocation(), TargetActor->GetActorLocation());
+    if (Distance <= AcceptRadius)
+    {
+        EndTask(true);
+        return;
+    }
 }
 
 void UMMAT_MoveToTarget::TickTask(float DeltaTime)
@@ -43,7 +57,7 @@ void UMMAT_MoveToTarget::TickTask(float DeltaTime)
 
     if (!TargetActor.IsValid())
     {
-        EndTask();
+        EndTask(false);
         return;
     }
 
@@ -51,17 +65,25 @@ void UMMAT_MoveToTarget::TickTask(float DeltaTime)
     if (TimeSinceLastCheck < RecheckInterval) return;
     TimeSinceLastCheck = 0.f;
 
-    AActor* Avatar = GetAvatarActor();
-    float Distance = FVector::Dist(Avatar->GetActorLocation(), TargetActor->GetActorLocation());
-    if (Distance <= AcceptRadius)
-    {
-        OnArrived.Broadcast(TargetActor.Get());
-        EndTask();
-    }
+    CheckDistance();
 }
 
 void UMMAT_MoveToTarget::OnDestroy(bool bInOwnerFinished)
 {
     bTickingTask = false;
     Super::OnDestroy(bInOwnerFinished);
+}
+
+void UMMAT_MoveToTarget::EndTask(bool bSuccess)
+{
+    if (bSuccess)
+    {
+        AvatarController->StopMovement();
+        AvatarController = nullptr;
+    }
+
+    AActor* result = bSuccess ? TargetActor.Get() : nullptr;
+    OnArrived.Broadcast(result);
+    Super::EndTask();
+    return;
 }
