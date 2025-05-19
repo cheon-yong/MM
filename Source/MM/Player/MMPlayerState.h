@@ -7,7 +7,7 @@
 #include "MMPlayerState.generated.h"
 
 class UAbilitySystemComponent;
-class UAttributeSet;
+class UMMAttributeSet;
 
 /**
  * 
@@ -28,5 +28,5 @@ protected:
 
 	// Change Attribute
 	UPROPERTY()
-	TObjectPtr<UAttributeSet> AttributeSet;
+	TObjectPtr<UMMAttributeSet> AttributeSet;
 };
