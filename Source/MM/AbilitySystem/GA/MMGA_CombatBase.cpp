@@ -66,7 +66,7 @@ void UMMGA_CombatBase::OnTargetInRange_Implementation(AActor* Target)
 	MontageTask->OnCompleted.AddDynamic(this, &ThisClass::OnAttackMontageFinished);
 	MontageTask->OnInterrupted.AddDynamic(this, &ThisClass::OnAttackMontageFinished);
 	MontageTask->OnCancelled.AddDynamic(this, &ThisClass::OnAttackMontageFinished);
-	MontageTask->ReadyForActivation();
+	MontageTask->ReadyForActivation();	
 }
 
 void UMMGA_CombatBase::OnAttackMontageFinished_Implementation()
