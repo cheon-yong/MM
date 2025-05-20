@@ -8,6 +8,9 @@
 class UMMAT_MoveToTarget;
 class UMMAT_FindTarget;
 class UAbilityTask_PlayMontageAndWait;
+class UMMAT_HitTrace;
+class UAbilitySystemComponent;
+class UGameplayEffect;
 
 /**
  * 
@@ -25,6 +28,8 @@ public:
 	
 	AActor* GetTargetFromComponent() const;
 
+	void HitCheck();
+
 protected:
 
 	UFUNCTION()
@@ -36,6 +41,12 @@ protected:
 	UFUNCTION(BlueprintNativeEvent)
 	void OnAttackMontageFinished();
 
+	UFUNCTION()
+	void OnHitCheck(const TArray<FHitResult>& HitResults);
+
+	void ApplyDamageToTarget(UAbilitySystemComponent* TargetASC);
+
+
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	float SearchRadius = 1000.f;
@@ -44,8 +55,14 @@ public:
 	float AttackRange = 150.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<UGameplayEffect> AttackDamageEffect;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	FGameplayTag TargetTag;
-		
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Combat", meta = (Categories = "GameplayCue"))
+	FGameplayTag HitCueTag;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TObjectPtr<UAnimMontage> AttackMontage;
@@ -58,6 +75,9 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UAbilityTask_PlayMontageAndWait> MontageTask;
+
+	UPROPERTY()
+	TObjectPtr<UMMAT_HitTrace> HitTask;
 
 	UPROPERTY()
 	TObjectPtr<AActor> TargetActor;
