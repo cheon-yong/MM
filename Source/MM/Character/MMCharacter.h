@@ -12,6 +12,7 @@
 class UAbilitySystemComponent;
 class UGameplayAbility;
 class UAutoCombatComponent;
+class UMMAttributeSet;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -32,6 +33,9 @@ protected:
 protected:
 	UPROPERTY(VisibleAnywhere, Category = GAS)
 	TObjectPtr<UAbilitySystemComponent> ASC;
+
+	UPROPERTY()
+	TObjectPtr<UMMAttributeSet> AttributeSet;
 
 	UPROPERTY(EditDefaultsOnly)
 	FGameplayTagContainer InitTags;

@@ -39,6 +39,8 @@ void AMMPlayerCharacter::PossessedBy(AController* NewController)
 			StartSpec.InputID = StartInputAbility.Key;
 			ASC->GiveAbility(StartSpec);
 		}
+
+		AttributeSet = MMPS->GetAttributeSet();
 	}
 
 }

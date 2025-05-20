@@ -4,6 +4,7 @@
 #include "Character/MMNonPlayerCharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/AttributeSet/MMAttributeSet.h"
 
 AMMNonPlayerCharacter::AMMNonPlayerCharacter()
 {

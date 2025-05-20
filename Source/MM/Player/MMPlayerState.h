@@ -22,6 +22,8 @@ public:
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+	UMMAttributeSet* GetAttributeSet();
+
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<UAbilitySystemComponent> ASC;

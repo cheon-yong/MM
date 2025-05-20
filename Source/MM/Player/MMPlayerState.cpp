@@ -17,3 +17,8 @@ UAbilitySystemComponent* AMMPlayerState::GetAbilitySystemComponent() const
 {
 	return ASC;
 }
+
+UMMAttributeSet* AMMPlayerState::GetAttributeSet()
+{
+	return AttributeSet;
+}

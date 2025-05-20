@@ -7,6 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/AttributeSet/MMAttributeSet.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -37,6 +38,7 @@ AMMCharacter::AMMCharacter()
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
 	ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
+	AttributeSet = CreateDefaultSubobject<UMMAttributeSet>(TEXT("AttributeSet"));
 
 	AutoCombatComponent = CreateDefaultSubobject<UAutoCombatComponent>(TEXT("AutoCombatComponent"));
 
