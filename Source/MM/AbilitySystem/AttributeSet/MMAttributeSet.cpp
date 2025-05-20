@@ -6,14 +6,14 @@
 #include "Net/UnrealNetwork.h"
 
 UMMAttributeSet::UMMAttributeSet() :
-	AttackRange(100.0f),
 	MaxAttackRange(300.0f),
-	AttackRadius(50.f),
+	AttackRange(100.0f),
 	MaxAttackRadius(150.0f),
-	AttackSpeed(1.0f),
+	AttackRadius(50.f),
 	MaxAttackSpeed(2.0f),
-	AttackRate(30.0f),
+	AttackSpeed(1.0f),
 	MaxAttackRate(100.0f),
+	AttackRate(30.0f),
 	MaxHealth(100.0f),
 	MaxStamina(100.f),
 	MaxBreakGauge(100.f),
