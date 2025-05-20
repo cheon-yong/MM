@@ -80,6 +80,13 @@ void UMMAT_MoveToTarget::EndTask(bool bSuccess)
     {
         AvatarController->StopMovement();
         AvatarController = nullptr;
+
+        AActor* Avatar = GetAvatarActor();
+        FVector ToTarget = TargetActor->GetActorLocation() - Avatar->GetActorLocation();
+        ToTarget.Z = 0;
+        FRotator LookAtRotation = ToTarget.Rotation();
+
+        Avatar->SetActorRotation(LookAtRotation);
     }
 
     AActor* result = bSuccess ? TargetActor.Get() : nullptr;
