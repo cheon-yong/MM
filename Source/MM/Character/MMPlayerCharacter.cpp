@@ -44,3 +44,30 @@ void AMMPlayerCharacter::PossessedBy(AController* NewController)
 	}
 
 }
+
+void AMMPlayerCharacter::Zoom(float ZoomTime, float TargetFOV)
+{
+	StartFOV = FollowCamera->FieldOfView;
+	EndFOV = TargetFOV;
+	ZoomDuration = FMath::Max(0.f, ZoomTime);
+
+	FTimerDelegate TimerDelegate;
+	ZoomElapseTime = 0.f;
+
+
+	TimerDelegate = FTimerDelegate::CreateLambda([&]() mutable {
+		ZoomElapseTime += GetWorld()->GetDeltaSeconds();
+
+		float Alpha = FMath::Clamp(ZoomElapseTime / ZoomDuration, 0.f, 1.f);
+		float CurrentFOV = FMath::Lerp(StartFOV, EndFOV, Alpha);
+		FollowCamera->FieldOfView = CurrentFOV;
+	});
+
+	GetWorldTimerManager().SetTimer(
+		ZoomHandle,
+		TimerDelegate,
+		GetWorld()->GetDeltaSeconds(),
+		true,
+		0.f
+	);
+}

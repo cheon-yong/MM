@@ -27,6 +27,8 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 
+	UFUNCTION(BlueprintCallable)
+	void Zoom(float Time, float TargetFOV);
 
 public:
 	UPROPERTY(EditAnywhere, Category = GAS)
@@ -40,5 +42,18 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
+	UPROPERTY(Transient)
+	FTimerHandle ZoomHandle;
 
+	UPROPERTY(Transient)
+	float StartFOV = 0.f;
+
+	UPROPERTY(Transient)
+	float EndFOV = 0.f;
+
+	UPROPERTY(Transient)
+	float ZoomDuration = 0.f;
+
+	UPROPERTY(Transient)
+	float ZoomElapseTime = 0.f;
 };
