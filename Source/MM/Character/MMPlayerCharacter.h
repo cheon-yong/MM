@@ -30,6 +30,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Zoom(float Time, float TargetFOV);
 
+	UFUNCTION(BlueprintCallable)
+	void ActivatePostProcessing(float Time, int Index);
+
 public:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TMap<int32, TSubclassOf<UGameplayAbility>> StartInputAbilities;
@@ -39,9 +42,11 @@ public:
 	USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
+#pragma region Zoom Variable
 	UPROPERTY(Transient)
 	FTimerHandle ZoomHandle;
 
@@ -56,4 +61,16 @@ public:
 
 	UPROPERTY(Transient)
 	float ZoomElapseTime = 0.f;
+#pragma endregion
+
+#pragma region Post Process
+	UPROPERTY(Transient)
+	FTimerHandle PPHandle;
+
+	UPROPERTY(Transient)
+	int32 PP_Index = INDEX_NONE;
+
+	UPROPERTY(Transient)
+	float PP_ActiveDuration = 0.f;
+#pragma endregion
 };

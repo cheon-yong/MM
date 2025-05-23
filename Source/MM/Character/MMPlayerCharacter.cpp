@@ -71,3 +71,26 @@ void AMMPlayerCharacter::Zoom(float ZoomTime, float TargetFOV)
 		0.f
 	);
 }
+
+void AMMPlayerCharacter::ActivatePostProcessing(float ActiveTime, int Index)
+{
+	
+	if (!FollowCamera->PostProcessSettings.WeightedBlendables.Array.IsValidIndex(Index))
+		return;
+
+	PP_Index = Index;
+	FollowCamera->PostProcessSettings.WeightedBlendables.Array[PP_Index].Weight = 1.0f;
+
+	FTimerDelegate TimerDelegate;
+	TimerDelegate = FTimerDelegate::CreateLambda([&]() mutable {
+		FollowCamera->PostProcessSettings.WeightedBlendables.Array[PP_Index].Weight = 0.f;
+		
+		});
+
+	GetWorldTimerManager().SetTimer(
+		PPHandle,
+		TimerDelegate,
+		ActiveTime,
+		false
+	);
+}
