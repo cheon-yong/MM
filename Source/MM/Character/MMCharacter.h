@@ -14,6 +14,8 @@ class UGameplayAbility;
 class UAutoCombatComponent;
 class UMMAttributeSet;
 
+struct FGameplayEffectSpec;
+
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
@@ -29,6 +31,8 @@ public:
 protected:
 	// To add mapping context
 	virtual void BeginPlay();
+
+	virtual void OnHealthChange(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue);
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category = GAS)

@@ -53,20 +53,25 @@ void AMMPlayerCharacter::Zoom(float ZoomTime, float TargetFOV, UCurveFloat* InCu
 	StartFOV = FollowCamera->FieldOfView;
 	EndFOV = TargetFOV;
 	ZoomDuration = FMath::Max(0.f, ZoomTime);
-	Curve = InCurve;
+	ZoomCurve = InCurve;
 
 	FTimerDelegate TimerDelegate;
 	ZoomElapseTime = 0.f;
-
 
 	TimerDelegate = FTimerDelegate::CreateLambda([&]() mutable {
 		ZoomElapseTime += GetWorld()->GetDeltaSeconds();
 
 		float Alpha = FMath::Clamp(ZoomElapseTime / ZoomDuration, 0.f, 1.f);
-		float CurveValue = Curve ? Curve->GetFloatValue(Alpha) : Alpha;
+		float CurveValue = ZoomCurve ? ZoomCurve->GetFloatValue(Alpha) : Alpha;
 		float CurrentFOV = FMath::Lerp(StartFOV, EndFOV, CurveValue);		
 
 		FollowCamera->FieldOfView = CurrentFOV;
+
+		if (Alpha >= 1.f)
+		{
+			ZoomCurve = nullptr;
+			GetWorldTimerManager().ClearTimer(ZoomHandle);
+		}
 	});
 
 	GetWorldTimerManager().SetTimer(
@@ -95,25 +100,40 @@ void AMMPlayerCharacter::SetTimeDilation(float InTargetDilation, float InTime)
 	DilationHandle = FTSTicker::GetCoreTicker().AddTicker(TickDelagate, InTime); // 0.1초 후 실행 (Real Time)
 }
 
-void AMMPlayerCharacter::ActivatePostProcessing(float ActiveTime, int Index)
+UE_DISABLE_OPTIMIZATION
+void AMMPlayerCharacter::ActivatePostProcessing(float ActiveTime, int Index, UCurveFloat* Curve)
 {
-	
 	if (!FollowCamera->PostProcessSettings.WeightedBlendables.Array.IsValidIndex(Index))
 		return;
 
 	PP_Index = Index;
-	FollowCamera->PostProcessSettings.WeightedBlendables.Array[PP_Index].Weight = 1.0f;
+	PP_ActiveDuration = ActiveTime;
+	PP_Curve = Curve;
+	PP_ElapseTime = 0;
 
 	FTimerDelegate TimerDelegate;
 	TimerDelegate = FTimerDelegate::CreateLambda([&]() mutable {
-		FollowCamera->PostProcessSettings.WeightedBlendables.Array[PP_Index].Weight = 0.f;
+		PP_ElapseTime += GetWorld()->GetDeltaSeconds();
+
+		float Alpha = FMath::Clamp(PP_ElapseTime / PP_ActiveDuration, 0.f, 1.f);
+		float CurveValue = PP_Curve ? PP_Curve->GetFloatValue(1 - Alpha) : Alpha;
+		float CurrentWeight = FMath::Lerp(1.0f, 0.0f, CurveValue);
 		
-		});
+		FollowCamera->PostProcessSettings.WeightedBlendables.Array[PP_Index].Weight = CurrentWeight;
+		
+		if (Alpha >= 1.f)
+		{
+			PP_Curve = nullptr;
+			GetWorldTimerManager().ClearTimer(PPHandle);
+		}
+	});
 
 	GetWorldTimerManager().SetTimer(
 		PPHandle,
 		TimerDelegate,
-		ActiveTime,
-		false
+		GetWorld()->GetDeltaSeconds(),
+		true,
+		0.f
 	);
 }
+UE_ENABLE_OPTIMIZATION

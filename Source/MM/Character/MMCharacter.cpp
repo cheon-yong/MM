@@ -8,6 +8,7 @@
 #include "GameFramework/Controller.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AttributeSet/MMAttributeSet.h"
+#include "GameplayEffect.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -56,5 +57,14 @@ void AMMCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
+	if (AttributeSet)
+	{
+		AttributeSet->OnHealthChanged.AddUObject(this, &ThisClass::OnHealthChange);
+	}
+}
+
+void AMMCharacter::OnHealthChange(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Damage"));
 }
 

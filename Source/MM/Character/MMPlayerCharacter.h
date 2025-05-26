@@ -34,7 +34,7 @@ public:
 	void SetTimeDilation(float InTargetDilation, float InTime);
 
 	UFUNCTION(BlueprintCallable)
-	void ActivatePostProcessing(float Time, int Index);
+	void ActivatePostProcessing(float Time, int Index, UCurveFloat* Curve);
 
 public:
 	UPROPERTY(EditAnywhere, Category = GAS)
@@ -77,7 +77,7 @@ public:
 	float ZoomElapseTime = 0.f;
 
 	UPROPERTY(Transient)
-	TObjectPtr<UCurveFloat> Curve = nullptr;
+	TObjectPtr<UCurveFloat> ZoomCurve = nullptr;
 
 #pragma endregion
 
@@ -90,5 +90,11 @@ public:
 
 	UPROPERTY(Transient)
 	float PP_ActiveDuration = 0.f;
+
+	UPROPERTY(Transient)
+	float PP_ElapseTime = 0.f;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UCurveFloat> PP_Curve = nullptr;
 #pragma endregion
 };

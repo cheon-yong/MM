@@ -7,6 +7,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 
+UE_DISABLE_OPTIMIZATION
 void UAN_HitTrace::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
 	Super::Notify(MeshComp, Animation, EventReference);
@@ -21,6 +22,8 @@ void UAN_HitTrace::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* A
 		for (const FGameplayAbilitySpec& Spec : Specs)
 		{
 			FGameplayTagContainer& Tags = Spec.Ability->AbilityTags;
+
+			bool bActive = Spec.IsActive();
 
 			if (Spec.IsActive() && Tags.HasAllExact(Container))
 			{
@@ -39,3 +42,4 @@ void UAN_HitTrace::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* A
 	}
 
 }
+UE_ENABLE_OPTIMIZATION

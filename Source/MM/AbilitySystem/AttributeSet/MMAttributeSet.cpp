@@ -97,6 +97,12 @@ void UMMAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 		SetDamage(0.0f);
 	}
 
+	// If health has actually changed activate callbacks
+	if (GetHealth() != HealthBeforeAttributeChange)
+	{
+		OnHealthChanged.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude, HealthBeforeAttributeChange, GetHealth());
+	}
+
 	if ((GetHealth() <= 0.0f) && !bOutOfHealth)
 	{
 		//Data.Target.AddLooseGameplayTag(ABTAG_CHARACTER_ISDEAD);
@@ -111,6 +117,19 @@ void UMMAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 // Network
 void UMMAttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)
 {
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMMAttributeSet, Health, OldValue);
+
+	const float CurrentHealth = GetHealth();
+	const float EstimatedMagnitude = CurrentHealth - OldValue.GetCurrentValue();
+
+	OnHealthChanged.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentHealth);
+
+	if (!bOutOfHealth && CurrentHealth <= 0.0f)
+	{
+		OnOutOfHealth.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentHealth);
+	}
+
+	bOutOfHealth = (CurrentHealth <= 0.0f);
 }
 
 void UMMAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldValue)
