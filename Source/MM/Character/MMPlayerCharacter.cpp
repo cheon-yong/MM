@@ -3,10 +3,12 @@
 
 #include "Character/MMPlayerCharacter.h"
 
+#include "Containers/Ticker.h"
 #include "AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Player/MMPlayerState.h"
+#include <Kismet/GameplayStatics.h>
 
 AMMPlayerCharacter::AMMPlayerCharacter()
 {
@@ -45,11 +47,13 @@ void AMMPlayerCharacter::PossessedBy(AController* NewController)
 
 }
 
-void AMMPlayerCharacter::Zoom(float ZoomTime, float TargetFOV)
+
+void AMMPlayerCharacter::Zoom(float ZoomTime, float TargetFOV, UCurveFloat* InCurve)
 {
 	StartFOV = FollowCamera->FieldOfView;
 	EndFOV = TargetFOV;
 	ZoomDuration = FMath::Max(0.f, ZoomTime);
+	Curve = InCurve;
 
 	FTimerDelegate TimerDelegate;
 	ZoomElapseTime = 0.f;
@@ -59,7 +63,9 @@ void AMMPlayerCharacter::Zoom(float ZoomTime, float TargetFOV)
 		ZoomElapseTime += GetWorld()->GetDeltaSeconds();
 
 		float Alpha = FMath::Clamp(ZoomElapseTime / ZoomDuration, 0.f, 1.f);
-		float CurrentFOV = FMath::Lerp(StartFOV, EndFOV, Alpha);
+		float CurveValue = Curve ? Curve->GetFloatValue(Alpha) : Alpha;
+		float CurrentFOV = FMath::Lerp(StartFOV, EndFOV, CurveValue);		
+
 		FollowCamera->FieldOfView = CurrentFOV;
 	});
 
@@ -70,6 +76,23 @@ void AMMPlayerCharacter::Zoom(float ZoomTime, float TargetFOV)
 		true,
 		0.f
 	);
+}
+
+void AMMPlayerCharacter::SetTimeDilation(float InTargetDilation, float InTime)
+{
+	OriginDilation = UGameplayStatics::GetGlobalTimeDilation(GetWorld());
+
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), InTargetDilation);
+
+	FTickerDelegate TickDelagate;
+	TickDelagate = FTickerDelegate::CreateLambda([World = GetWorld(), this](float DeltaTime)
+		{
+			UGameplayStatics::SetGlobalTimeDilation(World, OriginDilation);
+			FTSTicker::GetCoreTicker().RemoveTicker(DilationHandle);
+			return false; // 단발성 실행
+		});
+
+	DilationHandle = FTSTicker::GetCoreTicker().AddTicker(TickDelagate, InTime); // 0.1초 후 실행 (Real Time)
 }
 
 void AMMPlayerCharacter::ActivatePostProcessing(float ActiveTime, int Index)

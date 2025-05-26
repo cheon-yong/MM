@@ -3,9 +3,9 @@
 #pragma once
 
 #include "Character/MMCharacter.h"
+#include "Delegates/IDelegateInstance.h"
 #include "AbilitySystemInterface.h"
 #include "MMPlayerCharacter.generated.h"
-
 
 class UAbilitySystemComponent;
 
@@ -28,7 +28,10 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 	UFUNCTION(BlueprintCallable)
-	void Zoom(float Time, float TargetFOV);
+	void Zoom(float Time, float TargetFOV, UCurveFloat* Curve);
+
+	UFUNCTION(BlueprintCallable)
+	void SetTimeDilation(float InTargetDilation, float InTime);
 
 	UFUNCTION(BlueprintCallable)
 	void ActivatePostProcessing(float Time, int Index);
@@ -46,6 +49,17 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
+#pragma region TimeDilation
+
+	FTSTicker::FDelegateHandle DilationHandle;
+
+	UPROPERTY(Transient)
+	float OriginDilation = 0.f;
+
+	UPROPERTY(Transient)
+	float TagetDilation = 0.f;
+#pragma endregion
+
 #pragma region Zoom Variable
 	UPROPERTY(Transient)
 	FTimerHandle ZoomHandle;
@@ -61,6 +75,10 @@ public:
 
 	UPROPERTY(Transient)
 	float ZoomElapseTime = 0.f;
+
+	UPROPERTY(Transient)
+	TObjectPtr<UCurveFloat> Curve = nullptr;
+
 #pragma endregion
 
 #pragma region Post Process
