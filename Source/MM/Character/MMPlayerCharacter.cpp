@@ -8,7 +8,9 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Player/MMPlayerState.h"
-#include <Kismet/GameplayStatics.h>
+#include "Kismet/GameplayStatics.h"
+#include "Player/MMPlayerController.h"
+#include "Camera/PlayerCameraManager.h"
 
 AMMPlayerCharacter::AMMPlayerCharacter()
 {
@@ -55,6 +57,11 @@ void AMMPlayerCharacter::Zoom(float ZoomTime, float TargetFOV, UCurveFloat* InCu
 	ZoomDuration = FMath::Max(0.f, ZoomTime);
 	ZoomCurve = InCurve;
 
+	if (AMMPlayerController* MMPC = Cast<AMMPlayerController>(GetController()))
+	{
+		MMPC->PlayerCameraManager->CustomTimeDilation = 1.0f;
+	}
+
 	FTimerDelegate TimerDelegate;
 	ZoomElapseTime = 0.f;
 
@@ -100,7 +107,6 @@ void AMMPlayerCharacter::SetTimeDilation(float InTargetDilation, float InTime)
 	DilationHandle = FTSTicker::GetCoreTicker().AddTicker(TickDelagate, InTime); // 0.1초 후 실행 (Real Time)
 }
 
-UE_DISABLE_OPTIMIZATION
 void AMMPlayerCharacter::ActivatePostProcessing(float ActiveTime, int Index, UCurveFloat* Curve)
 {
 	if (!FollowCamera->PostProcessSettings.WeightedBlendables.Array.IsValidIndex(Index))
@@ -139,4 +145,3 @@ void AMMPlayerCharacter::ActivatePostProcessing(float ActiveTime, int Index, UCu
 		0.f
 	);
 }
-UE_ENABLE_OPTIMIZATION

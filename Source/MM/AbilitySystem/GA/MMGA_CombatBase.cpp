@@ -106,14 +106,12 @@ void UMMGA_CombatBase::ApplyDamageToTarget(UAbilitySystemComponent* TargetASC)
 
 	// 1. EffectContext 생성
 	FGameplayEffectContextHandle EffectContext = SourceASC->MakeEffectContext();
-	EffectContext.AddSourceObject(this); // 옵션: 어떤 Ability에서 나왔는지 추적
+	EffectContext.AddSourceObject(this); 
 
-	// 2. EffectSpecHandle 생성 (레벨 지정 가능)
 	FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(AttackDamageEffect, GetAbilityLevel(), EffectContext);
 
 	if (SpecHandle.IsValid())
 	{
-		// 3. 대상에게 적용
 		SourceASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetASC);
 	}
 }
