@@ -68,3 +68,11 @@ void AMMCharacter::OnHealthChange(AActor* EffectInstigator, AActor* EffectCauser
 	UE_LOG(LogTemp, Warning, TEXT("Damage"));
 }
 
+UAnimMontage* AMMCharacter::GetHitMontage(FGameplayTag ScaleTag)
+{
+	if (HitMontages.Num() == 0)
+		return nullptr;
+
+	return HitMontages[ScaleTag];
+}
+

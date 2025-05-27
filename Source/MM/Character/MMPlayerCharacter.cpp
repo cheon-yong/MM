@@ -106,6 +106,9 @@ void AMMPlayerCharacter::ActivatePostProcessing(float ActiveTime, int Index, UCu
 	if (!FollowCamera->PostProcessSettings.WeightedBlendables.Array.IsValidIndex(Index))
 		return;
 
+	if (ActiveTime == 0)
+		return;
+
 	PP_Index = Index;
 	PP_ActiveDuration = ActiveTime;
 	PP_Curve = Curve;
@@ -116,7 +119,7 @@ void AMMPlayerCharacter::ActivatePostProcessing(float ActiveTime, int Index, UCu
 		PP_ElapseTime += GetWorld()->GetDeltaSeconds();
 
 		float Alpha = FMath::Clamp(PP_ElapseTime / PP_ActiveDuration, 0.f, 1.f);
-		float CurveValue = PP_Curve ? PP_Curve->GetFloatValue(1 - Alpha) : Alpha;
+		float CurveValue = PP_Curve ? PP_Curve->GetFloatValue(1 - Alpha) : 1 - Alpha;
 		float CurrentWeight = FMath::Lerp(1.0f, 0.0f, CurveValue);
 		
 		FollowCamera->PostProcessSettings.WeightedBlendables.Array[PP_Index].Weight = CurrentWeight;

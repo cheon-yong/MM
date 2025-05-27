@@ -34,6 +34,9 @@ protected:
 
 	virtual void OnHealthChange(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue);
 
+	UFUNCTION(BlueprintCallable)
+	UAnimMontage* GetHitMontage(FGameplayTag ScaleTag);
+
 protected:
 	UPROPERTY(VisibleAnywhere, Category = GAS)
 	TObjectPtr<UAbilitySystemComponent> ASC;
@@ -46,5 +49,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = Combat)
 	TObjectPtr<UAutoCombatComponent> AutoCombatComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat)
+	TMap<FGameplayTag, UAnimMontage*> HitMontages;
 };
 
