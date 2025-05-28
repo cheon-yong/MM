@@ -51,7 +51,8 @@ void AMMPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(HoldAction, ETriggerEvent::Started, this, &ThisClass::HoldScreen);
 		EnhancedInputComponent->BindAction(HoldAction, ETriggerEvent::Completed, this, &ThisClass::ReleaseScreen);
 
-		EnhancedInputComponent->BindAction(AutoCombatAction, ETriggerEvent::Triggered, this, &ThisClass::ActivateAbility, 0);
+		EnhancedInputComponent->BindAction(BaseAttackAction, ETriggerEvent::Triggered, this, &ThisClass::ActivateAbility, 0);
+		EnhancedInputComponent->BindAction(ComboAttackAction, ETriggerEvent::Triggered, this, &ThisClass::ActivateAbility, 1);
 	}
 	else
 	{
@@ -120,7 +121,6 @@ void AMMPlayerController::ActivateAbility(int32 InputId)
 		}
 	}
 }
-
 
 void AMMPlayerController::HoldScreen()
 {

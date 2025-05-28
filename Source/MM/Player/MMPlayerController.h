@@ -57,5 +57,8 @@ protected:
 	UInputAction* HoldAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* AutoCombatAction;
+	UInputAction* BaseAttackAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ComboAttackAction;
 };
