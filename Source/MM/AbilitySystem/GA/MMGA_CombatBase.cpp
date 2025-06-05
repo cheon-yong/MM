@@ -44,9 +44,9 @@ AActor* UMMGA_CombatBase::GetTargetFromComponent() const
 	return nullptr;
 }
 
-void UMMGA_CombatBase::HitCheck()
+void UMMGA_CombatBase::HitCheck(TArray<TSubclassOf<UGameplayEffect>>& DamageEffects)
 {
-	HitTask = UMMAT_HitTrace::PerformHitTrace(this, TargetActor, AttackRange);
+	HitTask = UMMAT_HitTrace::PerformHitTrace(this, TargetActor, AttackRange, DamageEffects);
 	HitTask->OnHit.AddDynamic(this, &ThisClass::OnHitCheck);
 	HitTask->ReadyForActivation();
 }
@@ -65,7 +65,7 @@ void UMMGA_CombatBase::OnTargetAcquired(AActor* InTarget)
 	MoveTask->ReadyForActivation();
 }
 
-void UMMGA_CombatBase::OnHitCheck(const TArray<FHitResult>& HitResults)
+void UMMGA_CombatBase::OnHitCheck(const TArray<FHitResult>& HitResults, const TArray<TSubclassOf<UGameplayEffect>>& DamageEffects)
 {
 	for (const FHitResult& HitResult : HitResults)
 	{
@@ -77,7 +77,7 @@ void UMMGA_CombatBase::OnHitCheck(const TArray<FHitResult>& HitResults)
 			return;
 		}
 
-		ApplyDamageToTarget(TargetASC);
+		ApplyDamageToTarget(TargetASC, DamageEffects);
 
 
 		//FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(AttackDamageEffect, CurrentLevel);
@@ -96,23 +96,26 @@ void UMMGA_CombatBase::OnHitCheck(const TArray<FHitResult>& HitResults)
 	}
 }
 
-void UMMGA_CombatBase::ApplyDamageToTarget(UAbilitySystemComponent* TargetASC)
+void UMMGA_CombatBase::ApplyDamageToTarget(UAbilitySystemComponent* TargetASC, const TArray<TSubclassOf<UGameplayEffect>>& DamageEffects)
 {
 	UAbilitySystemComponent* SourceASC = GetAbilitySystemComponentFromActorInfo_Checked();
 	const UMMAttributeSet* SourceAttribute = SourceASC->GetSet<UMMAttributeSet>();
 
-	if (!AttackDamageEffect) 
+
+	if (DamageEffects.Num() <= 0)
 		return;
 
 	// 1. EffectContext »ý¼º
 	FGameplayEffectContextHandle EffectContext = SourceASC->MakeEffectContext();
 	EffectContext.AddSourceObject(this); 
 
-	FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(AttackDamageEffect, GetAbilityLevel(), EffectContext);
-
-	if (SpecHandle.IsValid())
+	for (TSubclassOf<UGameplayEffect> DamageEffect : DamageEffects)
 	{
-		SourceASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetASC);
+		FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffect, GetAbilityLevel(), EffectContext);
+		if (SpecHandle.IsValid())
+		{
+			SourceASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), TargetASC);
+		}
 	}
 }
 

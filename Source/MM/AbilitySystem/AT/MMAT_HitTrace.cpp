@@ -7,12 +7,13 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 
-UMMAT_HitTrace* UMMAT_HitTrace::PerformHitTrace(UGameplayAbility* OwningAbility, AActor* TargetActor, float AttackRange, float Delay)
+UMMAT_HitTrace* UMMAT_HitTrace::PerformHitTrace(UGameplayAbility* OwningAbility, AActor* TargetActor, float AttackRange, TArray<TSubclassOf<UGameplayEffect>>& AppliedEffect, float Delay)
 {
 	UMMAT_HitTrace* Task = NewAbilityTask<UMMAT_HitTrace>(OwningAbility);
 	Task->TargetActor = TargetActor;
 	Task->TraceDelay = Delay;
     Task->AttackRange = AttackRange;
+    Task->AppliedEffect = AppliedEffect;
 	return Task;
 }
 
@@ -77,6 +78,6 @@ void UMMAT_HitTrace::PerformTrace()
 
     if (HitResults.Num() > 0)
     {
-        OnHit.Broadcast(HitResults);
+        OnHit.Broadcast(HitResults, AppliedEffect);
     }
 }

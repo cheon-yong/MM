@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Abilities/GameplayAbility.h"
+#include "Animation/AN_HitTrace.h"
 #include "MMGA_CombatBase.generated.h"
 
 class UMMAT_MoveToTarget;
@@ -28,7 +29,7 @@ public:
 	
 	AActor* GetTargetFromComponent() const;
 
-	void HitCheck();
+	void HitCheck(TArray<TSubclassOf<UGameplayEffect>>& DamageEffects);
 
 protected:
 
@@ -42,9 +43,9 @@ protected:
 	void OnAttackMontageFinished();
 
 	UFUNCTION()
-	void OnHitCheck(const TArray<FHitResult>& HitResults);
+	void OnHitCheck(const TArray<FHitResult>& HitResults, const TArray<TSubclassOf<UGameplayEffect>>& DamageEffects);
 
-	void ApplyDamageToTarget(UAbilitySystemComponent* TargetASC);
+	void ApplyDamageToTarget(UAbilitySystemComponent* TargetASC, const TArray<TSubclassOf<UGameplayEffect>>& DamageEffects);
 
 
 public:
@@ -55,13 +56,10 @@ public:
 	float AttackRange = 150.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	TSubclassOf<UGameplayEffect> AttackDamageEffect;
+	TArray<TSubclassOf<UGameplayEffect>> AttackDamageEffects;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	FGameplayTag TargetTag;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Combat", meta = (Categories = "GameplayCue"))
-	FGameplayTag HitCueTag;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")

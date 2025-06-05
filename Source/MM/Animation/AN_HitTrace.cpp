@@ -33,7 +33,7 @@ void UAN_HitTrace::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* A
 					{
 						if (UMMGA_CombatBase* CombatGA = Cast<UMMGA_CombatBase>(InstancedAbility))
 						{
-							CombatGA->HitCheck(); 
+							CombatGA->HitCheck(DamageEffects);
 						}
 					}
 				}
