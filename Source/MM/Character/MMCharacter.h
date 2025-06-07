@@ -13,6 +13,7 @@ class UAbilitySystemComponent;
 class UGameplayAbility;
 class UAutoCombatComponent;
 class UMMAttributeSet;
+class AMMGhostActor;
 
 struct FGameplayEffectSpec;
 
@@ -27,6 +28,9 @@ public:
 	AMMCharacter();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	UFUNCTION(BlueprintCallable)
+	void CreateGhost();
 
 protected:
 	// To add mapping context
@@ -52,5 +56,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat)
 	TMap<FGameplayTag, UAnimMontage*> HitMontages;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Effect)
+	TSubclassOf<AMMGhostActor> GhostActorClass;
 };
 

@@ -1,9 +1,11 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "MMCharacter.h"
+#include "Actor/MMGhostActor.h"
 #include "Engine/LocalPlayer.h"
 #include "Character/AutoCombatComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "AbilitySystemComponent.h"
@@ -50,6 +52,20 @@ AMMCharacter::AMMCharacter()
 UAbilitySystemComponent* AMMCharacter::GetAbilitySystemComponent() const
 {
 	return ASC;
+}
+
+void AMMCharacter::CreateGhost()
+{
+	if (GhostActorClass == nullptr)
+	{
+		return;
+	}
+
+	FActorSpawnParameters SpawnParameter;
+	FTransform Transform = GetMesh()->GetComponentTransform();
+
+	AMMGhostActor* Ghost = GetWorld()->SpawnActor<AMMGhostActor>(GhostActorClass, Transform);
+	Ghost->Init(GetMesh());
 }
 
 void AMMCharacter::BeginPlay()
