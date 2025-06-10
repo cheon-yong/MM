@@ -45,15 +45,7 @@ AMMCharacter::AMMCharacter()
 	AttributeSet = CreateDefaultSubobject<UMMAttributeSet>(TEXT("AttributeSet"));
 
 	HpBarComponent = CreateDefaultSubobject<UMMWidgetComponent>(TEXT("HPBar"));
-	HpBarComponent->SetupAttachment(GetMesh());
-
-	if (HpBarComponent->GetWidget())
-	{
-		HpBarComponent->SetWidgetSpace(EWidgetSpace::Screen);
-		HpBarComponent->SetDrawSize(FVector2D(200.0f, 20.f));
-		HpBarComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	}
-
+	HpBarComponent->SetupAttachment(RootComponent);
 
 	AutoCombatComponent = CreateDefaultSubobject<UAutoCombatComponent>(TEXT("AutoCombatComponent"));
 

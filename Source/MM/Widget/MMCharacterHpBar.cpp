@@ -11,12 +11,12 @@ void UMMCharacterHpBar::SetAbilitySystemComponent(AActor* InOwner)
 
 	if (ASC)
 	{
-		ASC->GetGameplayAttributeValueChangeDelegate(UMMAttributeSet::GetHealthAttribute()).AddUObject(this, &ThisClass::OnHealthChanged);
-		ASC->GetGameplayAttributeValueChangeDelegate(UMMAttributeSet::GetMaxHealthAttribute()).AddUObject(this, &ThisClass::OnMaxHealthChanged);
-		
 		const UMMAttributeSet* CurrentAttributeSet = ASC->GetSet<UMMAttributeSet>();
 		if (CurrentAttributeSet)
 		{
+			CurrentAttributeSet->OnHealthChanged.AddUObject(this, &ThisClass::OnHealthChanged);
+			CurrentAttributeSet->OnMaxHealthChanged.AddUObject(this, &ThisClass::OnMaxHealthChanged);
+
 			CurrentHealth = CurrentAttributeSet->GetHealth();
 			CurrentMaxHealth = CurrentAttributeSet->GetMaxHealth();
 
@@ -28,22 +28,25 @@ void UMMCharacterHpBar::SetAbilitySystemComponent(AActor* InOwner)
 	}
 }
 
-void UMMCharacterHpBar::OnHealthChanged(const FOnAttributeChangeData& ChangeData)
+void UMMCharacterHpBar::OnHealthChanged(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue)
 {
-	CurrentHealth = ChangeData.NewValue;
+	CurrentHealth = NewValue;
 	UpdateHpBar();
 }
 
-void UMMCharacterHpBar::OnMaxHealthChanged(const FOnAttributeChangeData& ChangeData)
+void UMMCharacterHpBar::OnMaxHealthChanged(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue)
 {
-	CurrentMaxHealth = ChangeData.NewValue;
+	CurrentMaxHealth = NewValue;
 	UpdateHpBar();
 }
 
+UE_DISABLE_OPTIMIZATION
 void UMMCharacterHpBar::UpdateHpBar()
 {
 	if (PbHpBar)
 	{
-		PbHpBar->SetPercent(CurrentHealth / CurrentMaxHealth);
+		float Percent = CurrentHealth / CurrentMaxHealth;
+		PbHpBar->SetPercent(Percent);
 	}
 }
+UE_ENABLE_OPTIMIZATION

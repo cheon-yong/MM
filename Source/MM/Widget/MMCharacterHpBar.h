@@ -19,8 +19,9 @@ class MM_API UMMCharacterHpBar : public UMMUserWidget
 protected:
 	virtual void SetAbilitySystemComponent(AActor* InOwner) override;
 
-	virtual void OnHealthChanged(const FOnAttributeChangeData& ChangeData);
-	virtual void OnMaxHealthChanged(const FOnAttributeChangeData& ChangeData);
+	virtual void OnHealthChanged(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue);
+	virtual void OnMaxHealthChanged(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue);
+
 
 	void UpdateHpBar();
 
