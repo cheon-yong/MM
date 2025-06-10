@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "GameplayTagContainer.h"
+#include "GameplayEffectTypes.h"
 #include "MMCharacter.generated.h"
 
 
@@ -14,6 +15,7 @@ class UGameplayAbility;
 class UAutoCombatComponent;
 class UMMAttributeSet;
 class AMMGhostActor;
+class UMMWidgetComponent;
 
 struct FGameplayEffectSpec;
 
@@ -59,5 +61,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Effect)
 	TSubclassOf<AMMGhostActor> GhostActorClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widget)
+	TObjectPtr<UMMWidgetComponent> HpBarComponent;
 };
 

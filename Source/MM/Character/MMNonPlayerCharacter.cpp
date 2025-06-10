@@ -5,6 +5,9 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AttributeSet/MMAttributeSet.h"
+#include "Widget/MMWidgetComponent.h"
+#include "Widget/MMCharacterHpBar.h"
+
 
 AMMNonPlayerCharacter::AMMNonPlayerCharacter()
 {
@@ -15,6 +18,6 @@ void AMMNonPlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	ASC->InitAbilityActorInfo(this, this);
-
 	ASC->AddLooseGameplayTags(InitTags);
+
 }

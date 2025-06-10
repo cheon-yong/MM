@@ -7,6 +7,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Character/MMCharacter.h"
+#include "MMPlayerState.h"
 
 AMMPlayerController::AMMPlayerController()
 {
@@ -69,6 +70,17 @@ void AMMPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 
 void AMMPlayerController::Move(const FInputActionValue& Value)
 {
+	if (AMMPlayerState* PS = GetPlayerState<AMMPlayerState>())
+	{
+		if (UAbilitySystemComponent* ASC = PS->GetAbilitySystemComponent())
+		{
+			FGameplayTagContainer CancelTag;
+			CancelTag.AddTag(FGameplayTag::RequestGameplayTag("Ability.Fighter"));
+
+			ASC->CancelAbilities(&CancelTag);
+		}
+	}
+
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 

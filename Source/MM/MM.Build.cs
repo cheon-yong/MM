@@ -18,6 +18,7 @@ public class MM : ModuleRules
 			"Engine", 
 			"InputCore", 
 			"EnhancedInput",
+			"UMG",
 
 			"NavigationSystem",
 			"AIModule",

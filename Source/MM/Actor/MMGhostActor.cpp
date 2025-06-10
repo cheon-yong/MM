@@ -17,7 +17,6 @@ AMMGhostActor::AMMGhostActor()
 	PoseableMesh = CreateDefaultSubobject<UPoseableMeshComponent>(TEXT("PoseableMesh"));
 }
 
-UE_DISABLE_OPTIMIZATION
 void AMMGhostActor::Init(USkeletalMeshComponent* NewMesh)
 {
 	if (NewMesh == nullptr)
@@ -38,4 +37,3 @@ void AMMGhostActor::Init(USkeletalMeshComponent* NewMesh)
 
 	PlayTimeline();
 }
-UE_ENABLE_OPTIMIZATION
