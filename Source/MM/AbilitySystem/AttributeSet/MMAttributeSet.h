@@ -40,6 +40,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UMMAttributeSet, BreakGauge);
 	ATTRIBUTE_ACCESSORS(UMMAttributeSet, MaxBreakGauge);
 	ATTRIBUTE_ACCESSORS(UMMAttributeSet, Damage);
+	ATTRIBUTE_ACCESSORS(UMMAttributeSet, BreakDamage);
 
 	// Delegate when health changes due to damage/healing, some information may be missing on the client
 	mutable FMMAttributeEvent OnHealthChanged;
@@ -61,6 +62,8 @@ public:
 
 	// Delegate to broadcast when the health attribute reaches zero
 	mutable FMMAttributeEvent OnOutOfHealth;
+
+	mutable FMMAttributeEvent OnOutOfBreakGauge;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -140,5 +143,8 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Damage;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData BreakDamage;
 
 };

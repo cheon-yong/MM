@@ -21,7 +21,7 @@ UMMAttributeSet::UMMAttributeSet() :
 {
 	InitHealth(GetMaxHealth());
 	InitStamina(GetMaxStamina());
-	InitBreakGauge(GetMaxBreakGauge());
+	InitBreakGauge(0);
 }
 
 void UMMAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -40,7 +40,7 @@ void UMMAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 
 void UMMAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
-	if (Attribute == GetDamageAttribute())
+	if (Attribute == GetDamageAttribute() || Attribute == GetBreakDamageAttribute())
 	{
 		NewValue = NewValue < 0.0f ? 0.0f : NewValue;
 	}
@@ -81,7 +81,7 @@ void UMMAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 {
 	Super::PostGameplayEffectExecute(Data);
 
-	float MinimumHealth = 0.0f;
+	float MinimumValue = 0.0f;
 
 	const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
 	AActor* Instigator = EffectContext.GetOriginalInstigator();
@@ -89,12 +89,17 @@ void UMMAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
-		SetHealth(FMath::Clamp(GetHealth(), MinimumHealth, GetMaxHealth()));
+		SetHealth(FMath::Clamp(GetHealth(), MinimumValue, GetMaxHealth()));
 	}
 	else if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
-		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinimumHealth, GetMaxHealth()));
+		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinimumValue, GetMaxHealth()));
 		SetDamage(0.0f);
+	}
+	else if (Data.EvaluatedData.Attribute == GetBreakDamageAttribute())
+	{
+		SetBreakGauge(FMath::Clamp(GetBreakGauge() + GetBreakDamage(), MinimumValue, GetMaxBreakGauge()));
+		SetBreakDamage(0.0f);
 	}
 
 	// If health has actually changed activate callbacks
@@ -103,10 +108,20 @@ void UMMAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 		OnHealthChanged.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude, HealthBeforeAttributeChange, GetHealth());
 	}
 
+	if (GetBreakGauge() != BreakGaugeBeforeAttributeChange)
+	{
+		OnBreakGaugeChanged.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude, BreakGaugeBeforeAttributeChange, GetBreakGauge());
+	}
+
 	if ((GetHealth() <= 0.0f) && !bOutOfHealth)
 	{
 		//Data.Target.AddLooseGameplayTag(ABTAG_CHARACTER_ISDEAD);
 		OnOutOfHealth.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude, HealthBeforeAttributeChange, GetHealth());
+	}
+
+	if ((GetBreakGauge() <= 0.0f))
+	{
+		OnOutOfBreakGauge.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude, BreakGaugeBeforeAttributeChange, GetBreakGauge());
 	}
 
 	bOutOfHealth = (GetHealth() <= 0.0f);

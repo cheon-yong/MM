@@ -44,8 +44,8 @@ AMMCharacter::AMMCharacter()
 	ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
 	AttributeSet = CreateDefaultSubobject<UMMAttributeSet>(TEXT("AttributeSet"));
 
-	HpBarComponent = CreateDefaultSubobject<UMMWidgetComponent>(TEXT("HPBar"));
-	HpBarComponent->SetupAttachment(RootComponent);
+	StatusBarComponent = CreateDefaultSubobject<UMMWidgetComponent>(TEXT("StatusBar"));
+	StatusBarComponent->SetupAttachment(RootComponent);
 
 	AutoCombatComponent = CreateDefaultSubobject<UAutoCombatComponent>(TEXT("AutoCombatComponent"));
 

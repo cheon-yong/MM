@@ -63,6 +63,6 @@ protected:
 	TSubclassOf<AMMGhostActor> GhostActorClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widget)
-	TObjectPtr<UMMWidgetComponent> HpBarComponent;
+	TObjectPtr<UMMWidgetComponent> StatusBarComponent;
 };
 

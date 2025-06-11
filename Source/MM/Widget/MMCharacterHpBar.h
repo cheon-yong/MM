@@ -16,9 +16,10 @@ class MM_API UMMCharacterHpBar : public UMMUserWidget
 {
 	GENERATED_BODY()
 	
-protected:
+public:
 	virtual void SetAbilitySystemComponent(AActor* InOwner) override;
 
+protected:
 	virtual void OnHealthChanged(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue);
 	virtual void OnMaxHealthChanged(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue);
 
@@ -32,5 +33,4 @@ protected:
 	float CurrentHealth = 0.0f;
 	float CurrentMaxHealth = 0.1f;
 
-	//FLinearColor HealthColor = FLinearColor::Red;
 };

@@ -8,7 +8,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class MM_API UMMWidgetComponent : public UWidgetComponent
 {
 	GENERATED_BODY()
