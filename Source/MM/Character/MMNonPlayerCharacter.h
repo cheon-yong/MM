@@ -19,6 +19,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
+	void OnBreak(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue);
+
 protected:
 
 };

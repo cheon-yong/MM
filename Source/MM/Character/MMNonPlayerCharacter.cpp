@@ -20,4 +20,25 @@ void AMMNonPlayerCharacter::BeginPlay()
 	ASC->InitAbilityActorInfo(this, this);
 	ASC->AddLooseGameplayTags(InitTags);
 
+	if (const UMMAttributeSet* CurrentAttributeSet = ASC->GetSet<UMMAttributeSet>())
+	{
+		CurrentAttributeSet->OnOutOfBreakGauge.AddUObject(this, &ThisClass::OnBreak);
+	}
+}
+
+void AMMNonPlayerCharacter::OnBreak(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue)
+{
+	if (IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(EffectInstigator))
+	{
+		UAbilitySystemComponent* InstigatorASC = ASCInterface->GetAbilitySystemComponent();
+		if (InstigatorASC)
+		{
+			FGameplayCueParameters Params;
+			Params.Location = GetActorLocation();
+			Params.Instigator = EffectInstigator;
+			Params.OriginalTag = FGameplayTag::RequestGameplayTag("GameplayCue.Break");
+
+			InstigatorASC->ExecuteGameplayCue(FGameplayTag::RequestGameplayTag("GameplayCue.Break"), Params);
+		}
+	}
 }

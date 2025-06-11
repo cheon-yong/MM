@@ -119,9 +119,10 @@ void UMMAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 		OnOutOfHealth.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude, HealthBeforeAttributeChange, GetHealth());
 	}
 
-	if ((GetBreakGauge() <= 0.0f))
+	if ((GetBreakGauge() >= GetMaxBreakGauge()))
 	{
 		OnOutOfBreakGauge.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude, BreakGaugeBeforeAttributeChange, GetBreakGauge());
+		SetBreakGauge(0.f);
 	}
 
 	bOutOfHealth = (GetHealth() <= 0.0f);
