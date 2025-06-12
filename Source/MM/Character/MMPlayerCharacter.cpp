@@ -90,6 +90,11 @@ void AMMPlayerCharacter::Zoom(float ZoomTime, float TargetFOV, UCurveFloat* InCu
 	);
 }
 
+void AMMPlayerCharacter::ZoomForTick(float TargetFOV)
+{
+	FollowCamera->FieldOfView = TargetFOV;
+}
+
 void AMMPlayerCharacter::SetTimeDilation(float InTargetDilation, float InTime)
 {
 	OriginDilation = UGameplayStatics::GetGlobalTimeDilation(GetWorld());

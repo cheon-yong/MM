@@ -31,6 +31,9 @@ public:
 	void Zoom(float Time, float TargetFOV, UCurveFloat* Curve);
 
 	UFUNCTION(BlueprintCallable)
+	void ZoomForTick(float TargetFOV);
+
+	UFUNCTION(BlueprintCallable)
 	void SetTimeDilation(float InTargetDilation, float InTime);
 
 	UFUNCTION(BlueprintCallable)

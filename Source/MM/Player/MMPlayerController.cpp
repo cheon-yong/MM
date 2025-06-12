@@ -22,6 +22,8 @@ void AMMPlayerController::BeginPlay()
 	InputMode.SetHideCursorDuringCapture(false);
 	SetInputMode(InputMode);
 	bShowMouseCursor = true;
+
+	
 }
 
 void AMMPlayerController::Tick(float DeltaSeconds)
@@ -52,8 +54,11 @@ void AMMPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(HoldAction, ETriggerEvent::Started, this, &ThisClass::HoldScreen);
 		EnhancedInputComponent->BindAction(HoldAction, ETriggerEvent::Completed, this, &ThisClass::ReleaseScreen);
 
-		EnhancedInputComponent->BindAction(BaseAttackAction, ETriggerEvent::Triggered, this, &ThisClass::ActivateAbility, 0);
-		EnhancedInputComponent->BindAction(ComboAttackAction, ETriggerEvent::Triggered, this, &ThisClass::ActivateAbility, 1);
+		// Abilities
+		for (int i = 0; i < AbilityActions.Num(); i++)
+		{
+			EnhancedInputComponent->BindAction(AbilityActions[i], ETriggerEvent::Triggered, this, &ThisClass::ActivateAbility, i);
+		}
 	}
 	else
 	{

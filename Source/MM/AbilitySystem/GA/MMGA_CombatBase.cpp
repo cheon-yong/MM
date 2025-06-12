@@ -49,6 +49,9 @@ void UMMGA_CombatBase::HitCheck(TArray<TSubclassOf<UGameplayEffect>>& DamageEffe
 	HitTask = UMMAT_HitTrace::PerformHitTrace(this, TargetActor, AttackRange, DamageEffects);
 	HitTask->OnHit.AddDynamic(this, &ThisClass::OnHitCheck);
 	HitTask->ReadyForActivation();
+
+	// Commit Cooldown
+	CommitAbilityCooldown(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true);
 }
 
 void UMMGA_CombatBase::OnTargetAcquired(AActor* InTarget)

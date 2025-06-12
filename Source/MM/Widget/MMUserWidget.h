@@ -17,10 +17,13 @@ class MM_API UMMUserWidget : public UUserWidget, public IAbilitySystemInterface
 	GENERATED_BODY()
 	
 public:
+	
+	UFUNCTION(BlueprintCallable)
 	virtual void SetAbilitySystemComponent(AActor* InOwner);
+
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 protected:
-	UPROPERTY(EditAnywhere, Category = GAS)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = GAS)
 	TObjectPtr<UAbilitySystemComponent> ASC;
 };
