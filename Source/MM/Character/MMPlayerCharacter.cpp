@@ -36,6 +36,7 @@ void AMMPlayerCharacter::PossessedBy(AController* NewController)
 	{
 		ASC = MMPS->GetAbilitySystemComponent();
 		ASC->InitAbilityActorInfo(MMPS, this);
+		ASC->AddLooseGameplayTags(InitTags);
 
 		for (const auto& StartInputAbility : StartInputAbilities)
 		{

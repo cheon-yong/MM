@@ -21,6 +21,9 @@ protected:
 	
 	void OnBreak(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue);
 
-protected:
+	void OnHealthZero(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue);
 
+protected:
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TArray<TSubclassOf<UGameplayAbility>> StartAbilities;
 };
