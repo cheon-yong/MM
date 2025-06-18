@@ -18,7 +18,10 @@ void UMMCharacterHpBar::SetAbilitySystemComponent(AActor* InOwner)
 			CurrentAttributeSet->OnMaxHealthChanged.AddUObject(this, &ThisClass::OnMaxHealthChanged);
 
 			CurrentHealth = CurrentAttributeSet->GetHealth();
+			BeforeHealth = CurrentHealth;
+
 			CurrentMaxHealth = CurrentAttributeSet->GetMaxHealth();
+			BeforeMaxHealth = CurrentMaxHealth;
 
 			if (CurrentMaxHealth > 0.0f)
 			{
@@ -30,17 +33,18 @@ void UMMCharacterHpBar::SetAbilitySystemComponent(AActor* InOwner)
 
 void UMMCharacterHpBar::OnHealthChanged(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue)
 {
+	BeforeHealth = CurrentHealth;
 	CurrentHealth = NewValue;
 	UpdateHpBar();
 }
 
 void UMMCharacterHpBar::OnMaxHealthChanged(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue)
 {
+	BeforeMaxHealth = CurrentMaxHealth;
 	CurrentMaxHealth = NewValue;
 	UpdateHpBar();
 }
 
-UE_DISABLE_OPTIMIZATION
 void UMMCharacterHpBar::UpdateHpBar()
 {
 	if (PbHpBar)
@@ -48,5 +52,9 @@ void UMMCharacterHpBar::UpdateHpBar()
 		float Percent = CurrentHealth / CurrentMaxHealth;
 		PbHpBar->SetPercent(Percent);
 	}
+
+	if (PbWhiteBar)
+	{
+		UpdateWhiteBar();
+	}
 }
-UE_ENABLE_OPTIMIZATION

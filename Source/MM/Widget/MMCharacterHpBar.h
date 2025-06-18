@@ -21,16 +21,31 @@ public:
 
 protected:
 	virtual void OnHealthChanged(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue);
+
 	virtual void OnMaxHealthChanged(AActor* EffectInstigator, AActor* EffectCauser, const FGameplayEffectSpec* EffectSpec, float EffectMagnitude, float OldValue, float NewValue);
 
-
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateWhiteBar();
+		
 	void UpdateHpBar();
 
 protected:
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<UProgressBar> PbHpBar;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	TObjectPtr<UProgressBar> PbWhiteBar;
+
+	UPROPERTY(BlueprintReadWrite)
+	float BeforeHealth = 0.0f;
+
+	UPROPERTY(BlueprintReadWrite)
+	float BeforeMaxHealth = 0.1f;
+
+	UPROPERTY(BlueprintReadWrite)
 	float CurrentHealth = 0.0f;
+
+	UPROPERTY(BlueprintReadWrite)
 	float CurrentMaxHealth = 0.1f;
 
 };
