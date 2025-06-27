@@ -90,7 +90,7 @@ void AMMCharacter::OnHealthChange(AActor* EffectInstigator, AActor* EffectCauser
 
 UAnimMontage* AMMCharacter::GetHitMontage(FGameplayTag ScaleTag)
 {
-	if (HitMontages.Num() == 0)
+	if (HitMontages.Num() == 0 || !ScaleTag.IsValid())
 		return nullptr;
 
 	return HitMontages[ScaleTag];
