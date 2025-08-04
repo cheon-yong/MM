@@ -35,8 +35,6 @@ public:
 	ATTRIBUTE_ACCESSORS(UMMAttributeSet, MaxAttackRate);
 	ATTRIBUTE_ACCESSORS(UMMAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UMMAttributeSet, MaxHealth);
-	ATTRIBUTE_ACCESSORS(UMMAttributeSet, Stamina);
-	ATTRIBUTE_ACCESSORS(UMMAttributeSet, MaxStamina);
 	ATTRIBUTE_ACCESSORS(UMMAttributeSet, BreakGauge);
 	ATTRIBUTE_ACCESSORS(UMMAttributeSet, MaxBreakGauge);
 	ATTRIBUTE_ACCESSORS(UMMAttributeSet, Damage);
@@ -47,12 +45,6 @@ public:
 
 	// Delegate when max health changes
 	mutable FMMAttributeEvent OnMaxHealthChanged;
-
-	// Delegate when health changes due to damage/healing, some information may be missing on the client
-	mutable FMMAttributeEvent OnStaminaChanged;
-
-	// Delegate when max health changes
-	mutable FMMAttributeEvent OnMaxStaminaChanged;
 
 	// Delegate when health changes due to damage/healing, some information may be missing on the client
 	mutable FMMAttributeEvent OnBreakGaugeChanged;
@@ -128,12 +120,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Health", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxHealth;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Health", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData Stamina;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Health", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData MaxStamina;
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_BreakGauge, Category = "Health", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData BreakGauge;

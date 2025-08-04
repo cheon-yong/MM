@@ -28,6 +28,9 @@ public:
     virtual void TickTask(float DeltaTime) override;
     virtual void OnDestroy(bool bInOwnerFinished) override;
 
+    UFUNCTION(Server, Reliable)
+    void Server_RunNavigation(AController* Controller, AActor* Target);
+
     void EndTask(bool bSuccess);
 
 private:

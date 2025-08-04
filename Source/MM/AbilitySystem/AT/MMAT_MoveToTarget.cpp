@@ -36,8 +36,22 @@ void UMMAT_MoveToTarget::Activate()
 
     CheckDistance();
     UAIBlueprintHelperLibrary::SimpleMoveToActor(AvatarController, TargetActor.Get());
+    /*if (AvatarController && AvatarController->HasAuthority())
+    {
+        UAIBlueprintHelperLibrary::SimpleMoveToActor(AvatarController, TargetActor.Get());
+    }
+    else
+    {
+        Server_RunNavigation(AvatarController, TargetActor.Get());
+    }*/
+    
 
     bTickingTask = true;
+}
+
+void UMMAT_MoveToTarget::Server_RunNavigation_Implementation(AController* Controller, AActor* Target)
+{
+    UAIBlueprintHelperLibrary::SimpleMoveToActor(Controller, Target);
 }
 
 void UMMAT_MoveToTarget::CheckDistance()

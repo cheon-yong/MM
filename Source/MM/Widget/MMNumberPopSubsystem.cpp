@@ -34,6 +34,9 @@ AMMNumberPopActor* UMMNumberPopSubsystem::GetOrCreateActor()
 
     AMMNumberPopActor* OutActor;
     ActorPool.Dequeue(OutActor);
+    if (OutActor == nullptr)
+        return nullptr;
+
     OutActor->SetHidden(false);
 	return OutActor;
 }

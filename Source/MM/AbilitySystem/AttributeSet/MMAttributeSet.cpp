@@ -15,12 +15,10 @@ UMMAttributeSet::UMMAttributeSet() :
 	MaxAttackRate(100.0f),
 	AttackRate(30.0f),
 	MaxHealth(100.0f),
-	MaxStamina(100.f),
 	MaxBreakGauge(100.f),
 	Damage(0.0f)
 {
 	InitHealth(GetMaxHealth());
-	InitStamina(GetMaxStamina());
 	InitBreakGauge(0);
 }
 
@@ -30,9 +28,6 @@ void UMMAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UMMAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UMMAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
-
-	DOREPLIFETIME_CONDITION_NOTIFY(UMMAttributeSet, Stamina, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UMMAttributeSet, MaxStamina, COND_None, REPNOTIFY_Always);
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UMMAttributeSet, BreakGauge, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UMMAttributeSet, MaxBreakGauge, COND_None, REPNOTIFY_Always);
@@ -67,9 +62,6 @@ bool UMMAttributeSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData& D
 
 	HealthBeforeAttributeChange = GetHealth();
 	MaxHealthBeforeAttributeChange = GetMaxHealth();
-
-	StaminaBeforeAttributeChange = GetStamina();
-	MaxStaminaBeforeAttributeChange = GetMaxStamina();
 
 	BreakGaugeBeforeAttributeChange = GetBreakGauge();
 	MaxBreakGaugeBeforeAttributeChange = GetMaxBreakGauge();

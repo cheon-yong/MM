@@ -66,6 +66,12 @@ void AMMPlayerController::SetupInputComponent()
 	}
 }
 
+void AMMPlayerController::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+}
+
+
 void AMMPlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

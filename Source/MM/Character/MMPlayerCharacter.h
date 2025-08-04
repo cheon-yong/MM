@@ -27,6 +27,13 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 
+	virtual void OnRep_PlayerState() override;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void K2_OnRep_PlayerState();
+
+	void InitAbilityActorInfo();
+
 	UFUNCTION(BlueprintCallable)
 	void Zoom(float Time, float TargetFOV, UCurveFloat* Curve);
 

@@ -30,6 +30,20 @@ void AMMPlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
+	InitAbilityActorInfo();
+}
+
+void AMMPlayerCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+
+	InitAbilityActorInfo();
+
+	K2_OnRep_PlayerState();
+}
+
+void AMMPlayerCharacter::InitAbilityActorInfo()
+{
 	AMMPlayerState* MMPS = GetPlayerState<AMMPlayerState>();
 
 	if (MMPS)
@@ -47,7 +61,6 @@ void AMMPlayerCharacter::PossessedBy(AController* NewController)
 
 		AttributeSet = MMPS->GetAttributeSet();
 	}
-
 }
 
 
